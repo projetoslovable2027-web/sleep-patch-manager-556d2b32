@@ -1,4 +1,4 @@
-import { Check, Lock, Pencil } from "@/components/checkout/icons";
+import { Check, Pencil, ShieldCheckSolid } from "@/components/checkout/icons";
 import type { ReactNode } from "react";
 
 export function PixIcon({ className = "size-5" }: { className?: string }) {
@@ -26,11 +26,9 @@ export function CheckoutHeader() {
         <a href="/" aria-label="Voltar para a loja Patch Sleep">
           <img src="/images/logo.svg" alt="Patch Sleep" className="h-10 w-auto" width="110" height="40" />
         </a>
-        <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-          <Lock className="size-4 text-success" aria-hidden="true" />
-          <span>
-            Pagamento <span className="text-foreground">100% seguro</span>
-          </span>
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <span>Ambiente seguro</span>
+          <ShieldCheckSolid className="size-5 text-primary" />
         </div>
       </div>
     </header>

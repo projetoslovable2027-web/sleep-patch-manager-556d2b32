@@ -37,16 +37,16 @@ export function saleItems(order: PricedOrder): SaleItem[] {
 }
 
 export type CardInput = { number: string; holderName: string; expiryMonth: string; expiryYear: string; cvv: string };
-export type DeviceInput = Partial<{
-  http_browser_language: string;
-  http_browser_color_depth: number;
-  http_browser_screen_height: number;
-  http_browser_screen_width: number;
-  http_browser_time_difference: number;
-  http_browser_java_enabled: boolean;
-  http_browser_javascript_enabled: boolean;
-  user_agent: string;
-}>;
+export type DeviceInput = {
+  http_browser_language?: string | undefined;
+  http_browser_color_depth?: number | undefined;
+  http_browser_screen_height?: number | undefined;
+  http_browser_screen_width?: number | undefined;
+  http_browser_time_difference?: number | undefined;
+  http_browser_java_enabled?: boolean | undefined;
+  http_browser_javascript_enabled?: boolean | undefined;
+  user_agent?: string | undefined;
+};
 
 function baseSaleBody(order: PricedOrder, input: SaleInput, ref: string) {
   const { customer, address, tracking = {} } = input;

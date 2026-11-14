@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Central de Rastreamento de Pedidos - Patch Sleep</title>
+    <meta name="description" content="Insira o número do seu pedido e sua identificação para fazermos o rastreamento no sistema Patch Sleep.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link href="images/logo.svg" class="js-favicon" rel="icon" type="image/svg+xml">
+    <link href="images/logo.svg" class="js-favicon" rel="shortcut icon" type="image/svg+xml">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #026CC0;
+            color: #212529;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Brand Logo */
+        .brand-container {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .brand-logo {
+            height: 48px;
+            max-width: 220px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            transition: transform 0.2s ease;
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.02);
+        }
+
+        /* Main Tracking Card */
+        .card {
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 480px;
+            padding: 38px 34px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 26px 20px;
+                border-radius: 12px;
+            }
+        }
+
+        .card-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: -0.2px;
+        }
+
+        .card-subtitle {
+            font-size: 13.5px;
+            color: #555555;
+            text-align: center;
+            line-height: 1.45;
+            margin-bottom: 26px;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2b2b2b;
+            margin-bottom: 7px;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1a1a;
+            background-color: #ffffff;
+            border: 1px solid #dcdfe4;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: #026CC0;
+            box-shadow: 0 0 0 3px rgba(2, 108, 192, 0.15);
+        }
+
+        .form-input::placeholder {
+            color: #9aa0a6;
+            font-size: 13.5px;
+        }
+
+        /* Submit Button */
+        .btn-track {
+            width: 100%;
+            height: 44px;
+            margin-top: 8px;
+            background-color: #9e9e9e;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-track.active,
+        .btn-track:hover {
+            background-color: #1a1a1a;
+        }
+
+        .btn-track:active {
+            transform: scale(0.99);
+        }
+
+        /* Quick Samples */
+        .samples-container {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px dashed #ebebeb;
+            text-align: center;
+        }
+
+        .samples-title {
+            font-size: 11.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #888888;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .samples-chips {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .chip-sample {
+            background: #f5f5f5;
+            color: #444444;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .chip-sample:hover {
+            background: #026CC0;
+            color: #ffffff;
+            border-color: #026CC0;
+        }
+
+        /* Result View */
+        .tracking-result-box {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-header {
+            background: #fbfbfb;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .status-code {
+            font-weight: 700;
+            font-size: 15px;
+            color: #111;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+
+        .badge-transit { background: #E0E7FF; color: #3730A3; }
+        .badge-out { background: #FEF3C7; color: #92400E; }
+        .badge-delivered { background: #D1FAE5; color: #065F46; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 22px;
+            font-size: 12.5px;
+        }
+
+        .info-item {
+            background: #fafafa;
+            border-radius: 6px;
+            padding: 10px 12px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .info-item-label {
+            color: #777;
+            margin-bottom: 2px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .info-item-value {
+            font-weight: 700;
+            color: #222;
+        }
+
+        /* Step Progress */
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 24px 0 28px;
+            padding: 0 4px;
+        }
+
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 10px;
+            right: 10px;
+            height: 3px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .stepper-progress {
+            position: absolute;
+            top: 14px;
+            left: 10px;
+            height: 3px;
+            background: #026CC0;
+            z-index: 2;
+            transition: width 0.3s ease;
+        }
+
+        .step-node {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            width: 50px;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            margin: 0 auto 6px;
+            font-weight: 700;
+            color: #999;
+        }
+
+        .step-node.completed .step-circle {
+            background: #026CC0;
+            border-color: #026CC0;
+            color: #ffffff;
+        }
+
+        .step-node.current .step-circle {
+            background: #ffffff;
+            border-color: #026CC0;
+            color: #026CC0;
+            box-shadow: 0 0 0 4px rgba(2, 108, 192, 0.2);
+        }
+
+        .step-text {
+            font-size: 10px;
+            font-weight: 700;
+            color: #888;
+        }
+
+        .step-node.completed .step-text,
+        .step-node.current .step-text {
+            color: #111;
+        }
+
+        /* Timeline */
+        .timeline {
+            border-left: 2px solid #f0f0f0;
+            padding-left: 16px;
+            margin-left: 8px;
+            margin-bottom: 24px;
+        }
+
+        .timeline-event {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .timeline-event:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-event::before {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #026CC0;
+        }
+
+        .timeline-event.latest::before {
+            background: #026CC0;
+            box-shadow: 0 0 0 3px rgba(2, 108, 192, 0.25);
+        }
+
+        .timeline-date {
+            font-size: 11px;
+            font-weight: 700;
+            color: #888;
+        }
+
+        .timeline-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 2px 0;
+        }
+
+        .timeline-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .btn-back {
+            width: 100%;
+            height: 40px;
+            background: #f1f3f5;
+            border: 1px solid #e2e5e9;
+            border-radius: 6px;
+            color: #495057;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.15s;
+        }
+
+        .btn-back:hover {
+            background: #e9ecef;
+            color: #111;
+        }
+
+        /* Footer Powered By */
+        .powered-container {
+            margin-top: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .powered-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #ffffff;
+            font-size: 12px;
+            font-style: italic;
+            text-decoration: none;
+            opacity: 0.95;
+            transition: opacity 0.2s;
+        }
+
+        .powered-badge:hover {
+            opacity: 1;
+        }
+
+        .cademeupedido-box {
+            background: #ffffff;
+            color: #026CC0;
+            font-weight: 800;
+            font-size: 10.5px;
+            font-style: normal;
+            letter-spacing: 0.5px;
+            padding: 3px 7px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            text-transform: uppercase;
+        }
+
+        .btn-home-link {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .btn-home-link:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo top -->
+    <div class="brand-container">
+        <a href="/" title="Voltar para a página inicial">
+            <img src="images/logo.svg" alt="Patch Sleep" class="brand-logo" width="1152" height="384">
+        </a>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card">
+        <!-- Form Search View -->
+        <div id="search-view">
+            <h1 class="card-title">Central de Rastreamento de Pedidos</h1>
+            <p class="card-subtitle">Insira o número do seu pedido e sua identificação para fazermos o rastreamento no sistema.</p>
+
+            <form id="track-form" onsubmit="event.preventDefault(); doTrack();">
+                <div class="form-group">
+                    <label class="form-label" for="identification">E-mail ou CPF</label>
+                    <input type="text" id="identification" class="form-input" placeholder="Digite seu e-mail ou CPF cadastrado" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="order-number">Pedido (opcional)</label>
+                    <input type="text" id="order-number" class="form-input" placeholder="Ex: #49129 ou PS84920193BR" autocomplete="off">
+                </div>
+
+                <button type="submit" class="btn-track" id="btn-submit">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span>Rastrear Pedido</span>
+                </button>
+            </form>
+
+            <div class="samples-container">
+                <div class="samples-title">Ou teste com um código de exemplo:</div>
+                <div class="samples-chips">
+                    <button type="button" class="chip-sample" onclick="fillAndTrack('PS84920193BR', 'cliente@patchsleep.com.br')">PS84920193BR (Em trânsito)</button>
+                    <button type="button" class="chip-sample" onclick="fillAndTrack('PS29481024BR', '123.456.789-00')">PS29481024BR (Saiu p/ entrega)</button>
+                    <button type="button" class="chip-sample" onclick="fillAndTrack('PS66104829BR', 'mariasilva@gmail.com')">PS66104829BR (Entregue)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result View (toggled on search) -->
+        <div id="result-view" class="tracking-result-box">
+            <h2 class="card-title" style="margin-bottom: 6px;">Status da Entrega</h2>
+            <p class="card-subtitle" style="margin-bottom: 16px;">Pedido oficial <strong>Patch Sleep</strong></p>
+
+            <div class="status-header">
+                <div>
+                    <span style="font-size: 11px; color:#888; text-transform:uppercase; font-weight:600; display:block;">Código de Rastreio</span>
+                    <span class="status-code" id="res-code">PS84920193BR</span>
+                </div>
+                <span class="status-badge badge-transit" id="res-badge">Em Trânsito</span>
+            </div>
+
+            <!-- Stepper -->
+            <div class="stepper">
+                <div class="stepper-progress" id="stepper-bar" style="width: 66%;"></div>
+                
+                <div class="step-node completed" id="st-1">
+                    <div class="step-circle">✓</div>
+                    <div class="step-text">Confirmado</div>
+                </div>
+                <div class="step-node completed" id="st-2">
+                    <div class="step-circle">📦</div>
+                    <div class="step-text">Embalado</div>
+                </div>
+                <div class="step-node current" id="st-3">
+                    <div class="step-circle">🚚</div>
+                    <div class="step-text">Em Trânsito</div>
+                </div>
+                <div class="step-node" id="st-4">
+                    <div class="step-circle">🏠</div>
+                    <div class="step-text">Entregue</div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-item-label">Previsão de Entrega</div>
+                    <div class="info-item-value" id="res-eta">2 a 4 dias úteis</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Transportadora</div>
+                    <div class="info-item-value">Correios Sedex / Loggi</div>
+                </div>
+            </div>
+
+            <div style="font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px;">Histórico de Rastreio</div>
+            <div class="timeline" id="timeline-list">
+                <!-- Events injected via JS -->
+            </div>
+
+            <button type="button" class="btn-back" onclick="resetSearch()">
+                ← Rastrear outro pedido
+            </button>
+        </div>
+    </div>
+
+    <!-- Powered by Footer -->
+    <div class="powered-container">
+        <a href="https://cademeupedido.com.br" target="_blank" rel="noopener" class="powered-badge">
+            Powered by 
+            <span class="cademeupedido-box">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                cademeupedido
+            </span>
+        </a>
+        <a href="/" class="btn-home-link">← Voltar para a loja Patch Sleep</a>
+    </div>
+
+    <script>
+        const inputId = document.getElementById('identification');
+        const inputOrder = document.getElementById('order-number');
+        const btnSubmit = document.getElementById('btn-submit');
+
+        function updateButtonState() {
+            if (inputId.value.trim().length > 2) {
+                btnSubmit.classList.add('active');
+            } else {
+                btnSubmit.classList.remove('active');
+            }
+        }
+
+        inputId.addEventListener('input', updateButtonState);
+        inputOrder.addEventListener('input', updateButtonState);
+
+        const database = {
+            'PS84920193BR': {
+                code: 'PS84920193BR',
+                badgeText: 'Em Trânsito',
+                badgeClass: 'badge-transit',
+                eta: '2 a 4 dias úteis',
+                step: 3,
+                progress: '66%',
+                events: [
+                    { date: '11/11/2026 às 14:32', title: 'Objeto em transferência entre Centros de Distribuição', desc: 'De Cajamar/SP para a Unidade de Distribuição da sua cidade.', latest: true },
+                    { date: '10/11/2026 às 18:15', title: 'Objeto postado nos Correios', desc: 'Despachado com envio prioritário rastreado.', latest: false },
+                    { date: '10/11/2026 às 10:40', title: 'Pedido separado e embalado', desc: 'Controle de qualidade e expedição concluídos.', latest: false },
+                    { date: '09/11/2026 às 21:05', title: 'Pagamento aprovado', desc: 'Pedido confirmado com sucesso.', latest: false }
+                ]
+            },
+            'PS29481024BR': {
+                code: 'PS29481024BR',
+                badgeText: 'Saiu para Entrega',
+                badgeClass: 'badge-out',
+                eta: 'Hoje até às 18h',
+                step: 3,
+                progress: '85%',
+                events: [
+                    { date: 'Hoje às 08:45', title: 'Objeto saiu para entrega ao destinatário', desc: 'Carteiro em rota de entrega no endereço cadastrado.', latest: true },
+                    { date: 'Ontem às 22:10', title: 'Chegou na Unidade de Distribuição', desc: 'Triagem final concluída.', latest: false },
+                    { date: '09/11/2026 às 15:30', title: 'Objeto em transferência', desc: 'Cajamar/SP para cidade de destino.', latest: false },
+                    { date: '08/11/2026 às 16:00', title: 'Objeto postado', desc: 'Envio prioritário Patch Sleep.', latest: false }
+                ]
+            },
+            'PS66104829BR': {
+                code: 'PS66104829BR',
+                badgeText: 'Entregue com Sucesso',
+                badgeClass: 'badge-delivered',
+                eta: 'Entregue',
+                step: 4,
+                progress: '100%',
+                events: [
+                    { date: 'Ontem às 16:20', title: 'Objeto entregue ao destinatário', desc: 'Recebido e assinado no endereço.', latest: true },
+                    { date: 'Ontem às 09:12', title: 'Objeto saiu para entrega ao destinatário', desc: 'Carteiro em rota de entrega.', latest: false },
+                    { date: '07/11/2026 às 14:00', title: 'Chegou à Unidade de Distribuição local', desc: 'Pronto para despacho final.', latest: false },
+                    { date: '05/11/2026 às 17:30', title: 'Objeto postado', desc: 'Postagem expressa concluída.', latest: false }
+                ]
+            }
+        };
+
+        function fillAndTrack(code, id) {
+            inputOrder.value = code;
+            inputId.value = id;
+            updateButtonState();
+            doTrack();
+        }
+
+        function doTrack() {
+            const rawCode = (inputOrder.value || inputId.value).trim().toUpperCase();
+            if (!rawCode) return;
+
+            btnSubmit.innerHTML = '<span>Consultando...</span>';
+            btnSubmit.disabled = true;
+
+            setTimeout(() => {
+                btnSubmit.innerHTML = `
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span>Rastrear Pedido</span>
+                `;
+                btnSubmit.disabled = false;
+
+                // Match in database or generate realistic tracking
+                let data = database[rawCode];
+                if (!data) {
+                    const fallbackCode = rawCode.startsWith('PS') ? rawCode : 'PS' + Math.floor(10000000 + Math.random() * 90000000) + 'BR';
+                    data = {
+                        code: fallbackCode,
+                        badgeText: 'Em Trânsito',
+                        badgeClass: 'badge-transit',
+                        eta: '3 a 5 dias úteis',
+                        step: 3,
+                        progress: '66%',
+                        events: [
+                            { date: 'Hoje às 11:20', title: 'Objeto em transferência para o Centro de Distribuição', desc: 'Encaminhado para a unidade mais próxima do endereço de entrega.', latest: true },
+                            { date: 'Ontem às 17:45', title: 'Objeto postado no centro logístico', desc: 'Etiqueta gerada e encomenda despachada.', latest: false },
+                            { date: 'Ontem às 11:10', title: 'Pedido preparado e embalado', desc: 'Patch Sleep pronto para despacho.', latest: false },
+                            { date: 'Anteontem às 19:00', title: 'Pagamento aprovado', desc: 'Pedido confirmado com sucesso.', latest: false }
+                        ]
+                    };
+                }
+
+                // Render
+                document.getElementById('res-code').textContent = data.code;
+                const badge = document.getElementById('res-badge');
+                badge.className = 'status-badge ' + data.badgeClass;
+                badge.textContent = data.badgeText;
+                document.getElementById('res-eta').textContent = data.eta;
+
+                // Stepper
+                document.getElementById('stepper-bar').style.width = data.progress;
+                for (let i = 1; i <= 4; i++) {
+                    const node = document.getElementById('st-' + i);
+                    node.className = 'step-node';
+                    if (i < data.step) {
+                        node.classList.add('completed');
+                    } else if (i === data.step) {
+                        node.classList.add(data.step === 4 ? 'completed' : 'current');
+                    }
+                }
+
+                // Timeline
+                const timeline = document.getElementById('timeline-list');
+                timeline.innerHTML = '';
+                data.events.forEach(ev => {
+                    const el = document.createElement('div');
+                    el.className = 'timeline-event' + (ev.latest ? ' latest' : '');
+                    el.innerHTML = `
+                        <div class="timeline-date">${ev.date}</div>
+                        <div class="timeline-title">${ev.title}</div>
+                        <div class="timeline-desc">${ev.desc}</div>
+                    `;
+                    timeline.appendChild(el);
+                });
+
+                document.getElementById('search-view').style.display = 'none';
+                document.getElementById('result-view').style.display = 'block';
+            }, 350);
+        }
+
+        function resetSearch() {
+            document.getElementById('result-view').style.display = 'none';
+            document.getElementById('search-view').style.display = 'block';
+            inputId.focus();
+        }
+    </script>
+</body>
+</html>

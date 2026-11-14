@@ -21,7 +21,7 @@ describe("BlackCat Pix sale", () => {
   it("with coupon PRIMEIRA15 the items still add up to the discounted total", () => {
     const order = buildOrder([{ id: "kit-1", qty: 1 }, { id: "kit-2", qty: 2 }], { coupon: "PRIMEIRA15", cep: "01310100" });
     const items = saleItems(order);
-    expect(order.totals.total).toBe(21500); // (59 + 2×97) − 15%
+    expect(order.totals.total).toBe(21505); // (59 + 2×97) − 15% = R$215,05
     expect(sum(items)).toBe(order.totals.total);
   });
 

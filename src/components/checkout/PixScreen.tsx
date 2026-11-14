@@ -1,5 +1,5 @@
-import { CheckCircle2, Copy } from "@/components/checkout/icons";
-import { useState } from "react";
+import { CheckCircle2, Copy, Loader2 } from "@/components/checkout/icons";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { formatBRL, type PixResult } from "@/lib/cart";
@@ -7,6 +7,30 @@ import { PixIcon } from "./parts";
 
 export function PixScreen({ pix, onDone }: { pix: PixResult; onDone: () => void }) {
   const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState(pix.status || "PENDING");
+  const paid = status === "PAID";
+  const cancelled = status === "CANCELLED";
+
+  // Check every few seconds whether the Pix was paid.
+  useEffect(() => {
+    if (!pix.transaction || paid || cancelled) return;
+    let stop = false;
+    const check = async () => {
+      try {
+        const res = await fetch(`/api/public/payment-status?id=${encodeURIComponent(pix.transaction!)}`);
+        const data = await res.json();
+        if (!stop && data.status) setStatus(data.status);
+      } catch {
+        /* try again on the next tick */
+      }
+    };
+    const t = setInterval(check, 5000);
+    return () => {
+      stop = true;
+      clearInterval(t);
+    };
+  }, [pix.transaction, paid, cancelled]);
+
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(pix.pix);
@@ -18,6 +42,26 @@ export function PixScreen({ pix, onDone }: { pix: PixResult; onDone: () => void 
     setTimeout(() => setCopied(false), 2500);
   };
 
+  if (paid) {
+    return (
+      <div className="mx-auto max-w-lg">
+        <div className="co-card p-6 text-center md:p-8">
+          <CheckCircle2 className="mx-auto size-14 text-success" aria-hidden="true" />
+          <h1 className="mt-3 text-2xl font-extrabold text-primary">Pagamento confirmado!</h1>
+          <p className="mt-2 text-muted-foreground">
+            Pedido <strong className="text-foreground">{pix.code}</strong> · {formatBRL(pix.amount)}
+          </p>
+          <p className="mt-4 text-sm">
+            Obrigado pela compra! Enviaremos os detalhes e o rastreio para <strong>{pix.email || "seu e-mail"}</strong>.
+          </p>
+          <Button variant="checkout" size="xl" className="mt-6" onClick={onDone}>
+            Voltar para a loja
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-lg">
       <div className="co-card p-6 text-center md:p-8">
@@ -28,19 +72,35 @@ export function PixScreen({ pix, onDone }: { pix: PixResult; onDone: () => void 
         </p>
         <p className="mt-4 text-4xl font-extrabold">{formatBRL(pix.amount)}</p>
 
-        <div className="co-qr mx-auto mt-6 w-56 rounded-xl border border-border bg-surface p-3" aria-label="QR Code do Pix" dangerouslySetInnerHTML={{ __html: pix.qrSvg }} />
+        {cancelled ? (
+          <p role="alert" className="mt-4 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm font-medium text-destructive">
+            Este Pix expirou. Volte à loja para gerar um novo.
+          </p>
+        ) : (
+          <>
+            {pix.qrImage ? (
+              <img src={pix.qrImage} alt="QR Code do Pix" width="224" height="224" className="mx-auto mt-6 size-56 rounded-xl border border-border bg-surface p-3" />
+            ) : pix.qrSvg ? (
+              <div className="co-qr mx-auto mt-6 w-56 rounded-xl border border-border bg-surface p-3" aria-label="QR Code do Pix" dangerouslySetInnerHTML={{ __html: pix.qrSvg }} />
+            ) : null}
 
-        <label htmlFor="co-pix-code" className="mt-6 block text-left text-sm font-semibold">Pix Copia e Cola</label>
-        <textarea id="co-pix-code" readOnly rows={3} value={pix.pix} className="co-input mt-1.5 h-auto resize-none py-2 font-mono text-xs" />
-        <Button variant="pay" size="xl" className="mt-3" onClick={copy}>
-          <Copy aria-hidden="true" /> {copied ? "Código copiado!" : "Copiar código Pix"}
-        </Button>
+            <label htmlFor="co-pix-code" className="mt-6 block text-left text-sm font-semibold">Pix Copia e Cola</label>
+            <textarea id="co-pix-code" readOnly rows={3} value={pix.pix} className="co-input mt-1.5 h-auto resize-none py-2 font-mono text-xs" />
+            <Button variant="pay" size="xl" className="mt-3" onClick={copy}>
+              <Copy aria-hidden="true" /> {copied ? "Código copiado!" : "Copiar código Pix"}
+            </Button>
+
+            <p className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" /> Aguardando o pagamento…
+            </p>
+          </>
+        )}
 
         <ol className="mt-6 space-y-2 text-left text-sm">
           {[
             <>Abra o app do seu banco e escolha <strong>Pix</strong>.</>,
             <>Escaneie o QR Code ou cole o código <strong>Pix Copia e Cola</strong>.</>,
-            <>Confirme o pagamento. A confirmação chega em <strong>{pix.email || "seu e-mail"}</strong>.</>,
+            <>Confirme o pagamento. Esta tela atualiza sozinha e a confirmação chega em <strong>{pix.email || "seu e-mail"}</strong>.</>,
           ].map((t, i) => (
             <li key={i} className="flex gap-3">
               <span className="co-step-badge size-6 text-xs">{i + 1}</span>

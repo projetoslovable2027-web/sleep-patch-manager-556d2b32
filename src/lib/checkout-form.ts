@@ -75,7 +75,7 @@ export function validateAddress(f: CheckoutForm): FieldErrors {
   return e;
 }
 
-// ---- Credit card (typed on our checkout; sent only to the payment gateway once it is connected) ----
+// ---- Credit card (typed on our checkout; passed through our server to BlackCat, never stored or logged) ----
 export type CardForm = { number: string; holder: string; expiry: string; cvv: string };
 export type CardErrors = Partial<Record<keyof CardForm, string>>;
 export const emptyCard: CardForm = { number: "", holder: "", expiry: "", cvv: "" };
@@ -144,4 +144,10 @@ export function validateCard(c: CardForm, now = new Date()): CardErrors {
   const cvvLen = cardBrand(c.number) === "amex" ? 4 : 3;
   if (digits(c.cvv).length !== cvvLen) e.cvv = `Digite os ${cvvLen} números do código.`;
   return e;
+}
+
+// Card fields in the shape BlackCat expects ("MM/AA" -> month "MM", year "20AA").
+export function cardForGateway(c: CardForm) {
+  const [mm = "", yy = ""] = c.expiry.split("/");
+  return { number: digits(c.number), holderName: c.holder.trim().replace(/\s+/g, " "), expiryMonth: mm, expiryYear: `20${yy}`, cvv: digits(c.cvv) };
 }

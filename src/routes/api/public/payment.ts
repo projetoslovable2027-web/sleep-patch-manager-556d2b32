@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 // @ts-expect-error plain browser module without type declarations
+import { pixSaleBody } from "@/lib/blackcat";
 import { buildOrder, isValidCpf, isValidPhone, isValidCep, normalizeCoupon, MAX_INSTALLMENTS } from "../../../../public/cart/cart-core.js";
 
 // Creates the payment for a checkout order (Pix or card). Prices are always
 // recomputed here from the kit list, never taken from the browser.
-// The payment gateway is not connected yet: once it is, `chargeWithGateway`
-// sends the order to it and returns the Pix code / card result.
+// Pix is charged through BlackCat (key in STRIPE_LIVE_API_KEY, read only here).
 
 const digits = (s: string) => s.replace(/\D/g, "");
 const text = (max: number) => z.string().trim().min(1).max(max);
@@ -65,8 +65,46 @@ export const Route = createFileRoute("/api/public/payment")({
         const order = buildOrder(items, { coupon: normalizeCoupon(coupon), cep: digits(address.zipcode) }, new URL(request.url).origin);
         if (!order.products.length || order.totals.total <= 0) return json({ error: "Seu carrinho está vazio." }, 400);
 
-        // No payment gateway connected yet.
-        return json({ error: "Os pagamentos estão sendo configurados. Tente novamente em breve." }, 503);
+        if (parsed.data.method === "card") {
+          return json({ error: "O pagamento com cartão estará disponível em breve. Por enquanto, pague com Pix." }, 503);
+        }
+
+        const apiKey = process.env.STRIPE_LIVE_API_KEY;
+        if (!apiKey) return json({ error: "Os pagamentos estão sendo configurados. Tente novamente em breve." }, 503);
+
+        const code = "PS" + Date.now().toString(36).toUpperCase().slice(-5) + Math.random().toString(36).slice(2, 5).toUpperCase();
+        const body = pixSaleBody(order, parsed.data, code);
+        let data: any;
+        try {
+          const res = await fetch("https://api.blackcatoficial.com/api/sales/create-sale", {
+            method: "POST",
+            headers: { "content-type": "application/json", "X-API-Key": apiKey },
+            body: JSON.stringify(body),
+          });
+          data = await res.json().catch(() => ({}));
+          if (!res.ok || !data?.success || !data.data?.paymentData) {
+            console.error("BlackCat create-sale failed", res.status, data?.message, data?.error);
+            return json({ error: "Não foi possível gerar o Pix agora. Confira seus dados e tente novamente." }, 502);
+          }
+        } catch (err) {
+          console.error("BlackCat create-sale error", err);
+          return json({ error: "Não foi possível gerar o Pix agora. Tente novamente em instantes." }, 502);
+        }
+
+        const sale = data.data;
+        const pd = sale.paymentData || {};
+        const pix = pd.copyPaste || pd.qrCode;
+        if (!pix) return json({ error: "Não foi possível gerar o Pix agora. Tente novamente." }, 502);
+        const qr = typeof pd.qrCodeBase64 === "string" ? pd.qrCodeBase64 : "";
+        return json({
+          transaction: sale.transactionId ?? null,
+          code,
+          amount: (sale.amount ?? order.totals.total) / 100,
+          status: String(sale.status || "PENDING").toUpperCase(),
+          pix,
+          qrImage: qr && !qr.startsWith("data:") ? `data:image/png;base64,${qr}` : qr,
+          expiresAt: pd.expiresAt ?? null,
+        });
       },
     },
   },

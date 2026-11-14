@@ -24,6 +24,7 @@ import { Route as SejaUmaInfluencerRouteImport } from './routes/seja-uma-influen
 import { Route as TermosECondicoesRouteImport } from './routes/termos-e-condicoes'
 import { Route as DownloadAnimacaoRouteImport } from './routes/download/animacao'
 import { Route as ApiPublicPaymentRouteImport } from './routes/api/public/payment'
+import { Route as ApiPublicPaymentStatusRouteImport } from './routes/api/public/payment-status'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -100,6 +101,11 @@ const ApiPublicPaymentRoute = ApiPublicPaymentRouteImport.update({
   path: '/api/public/payment',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaymentStatusRoute = ApiPublicPaymentStatusRouteImport.update({
+  id: '/api/public/payment-status',
+  path: '/api/public/payment-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/download/animacao': typeof DownloadAnimacaoRoute
   '/api/public/payment': typeof ApiPublicPaymentRoute
+  '/api/public/payment-status': typeof ApiPublicPaymentStatusRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/download/animacao': typeof DownloadAnimacaoRoute
   '/api/public/payment': typeof ApiPublicPaymentRoute
+  '/api/public/payment-status': typeof ApiPublicPaymentStatusRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -152,6 +160,7 @@ export interface FileRoutesById {
   '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/download/animacao': typeof DownloadAnimacaoRoute
   '/api/public/payment': typeof ApiPublicPaymentRoute
+  '/api/public/payment-status': typeof ApiPublicPaymentStatusRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -171,6 +180,7 @@ export interface FileRouteTypes {
     | '/termos-e-condicoes'
     | '/download/animacao'
     | '/api/public/payment'
+    | '/api/public/payment-status'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/termos-e-condicoes'
     | '/download/animacao'
     | '/api/public/payment'
+    | '/api/public/payment-status'
   id:
     | '__root__'
     | '/'
@@ -205,6 +216,7 @@ export interface FileRouteTypes {
     | '/termos-e-condicoes'
     | '/download/animacao'
     | '/api/public/payment'
+    | '/api/public/payment-status'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   TermosECondicoesRoute: typeof TermosECondicoesRoute
   DownloadAnimacaoRoute: typeof DownloadAnimacaoRoute
   ApiPublicPaymentRoute: typeof ApiPublicPaymentRoute
+  ApiPublicPaymentStatusRoute: typeof ApiPublicPaymentStatusRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -332,6 +345,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaymentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payment-status': {
+      id: '/api/public/payment-status'
+      path: '/api/public/payment-status'
+      fullPath: '/api/public/payment-status'
+      preLoaderRoute: typeof ApiPublicPaymentStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -351,6 +371,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermosECondicoesRoute: TermosECondicoesRoute,
   DownloadAnimacaoRoute: DownloadAnimacaoRoute,
   ApiPublicPaymentRoute: ApiPublicPaymentRoute,
+  ApiPublicPaymentStatusRoute: ApiPublicPaymentStatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

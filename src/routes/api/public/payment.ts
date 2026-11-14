@@ -113,12 +113,12 @@ export const Route = createFileRoute("/api/public/payment")({
           data = await res.json().catch(() => ({}));
         } catch (err) {
           console.error("BlackCat create-sale error", isCard ? "card" : "pix", err instanceof Error ? err.message : "");
-          return json({ error: fail }, 502);
+          return json({ error: fail }, 424);
         }
         if (httpStatus < 200 || httpStatus >= 300 || !data?.success || !data.data) {
           console.error("BlackCat create-sale failed", isCard ? "card" : "pix", httpStatus, data?.message, data?.error);
           const msg = httpStatus === 400 || httpStatus === 422 ? (isCard ? "Confira os dados do cartão e tente novamente." : "Não foi possível gerar o Pix. Confira seus dados e tente novamente.") : fail;
-          return json({ error: msg }, 502);
+          return json({ error: msg }, 424);
         }
 
         if (isCard) {
@@ -144,7 +144,7 @@ export const Route = createFileRoute("/api/public/payment")({
         const sale = data.data;
         const pd = sale.paymentData || {};
         const pix = pd.copyPaste || pd.qrCode;
-        if (!pix) return json({ error: "Não foi possível gerar o Pix agora. Tente novamente." }, 502);
+        if (!pix) return json({ error: "Não foi possível gerar o Pix agora. Tente novamente." }, 424);
         const qr = typeof pd.qrCodeBase64 === "string" ? pd.qrCodeBase64 : "";
         return json({
           transaction: sale.transactionId ?? null,

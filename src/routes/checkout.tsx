@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft, CreditCard, Loader2, Lock, ShoppingBag, Truck, Zap } from "@/components/checkout/icons";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 
 import { MobileSummary, OrderSummary } from "@/components/checkout/OrderSummary";
 import { CheckoutFooter, CheckoutHeader, Field, PixIcon, StepCard, type StepState } from "@/components/checkout/parts";
+import { PaidScreen, ThreeDSScreen, type ThreeDS } from "@/components/checkout/CardScreens";
 import { PixScreen } from "@/components/checkout/PixScreen";
 import { Button } from "@/components/ui/button";
 import { BUMP, MAX_INSTALLMENTS, formatBRL, isValidCep, loadCart, readTracking, saveCart, setQty, summarize, thumb, type CartState } from "@/lib/cart";
-import { CARD_MASKS, MASKS, cardBrand, emptyCard, emptyForm, validateAddress, validateCard, validateIdentity, type CardErrors, type CardForm, type CheckoutForm, type FieldErrors } from "@/lib/checkout-form";
+import { CARD_MASKS, MASKS, cardBrand, cardForGateway, emptyCard, emptyForm, validateAddress, validateCard, validateIdentity, type CardErrors, type CardForm, type CheckoutForm, type FieldErrors } from "@/lib/checkout-form";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -45,6 +46,8 @@ function CheckoutPage() {
   // Card data stays in memory only (never saved to the browser storage or sent to our server).
   const [card, setCard] = useState<CardForm>(emptyCard);
   const [cardErrors, setCardErrors] = useState<CardErrors>({});
+  const [threeDS, setThreeDS] = useState<(ThreeDS & { code: string; amount: number }) | null>(null);
+  const [done, setDone] = useState<{ code: string; amount: number; email: string } | null>(null);
   const lastCep = useRef("");
 
   useEffect(() => {
@@ -73,6 +76,42 @@ function CheckoutPage() {
 
   // Until the saved cart is read (right after the page appears), the form is shown with a placeholder summary.
   const loading = cart === null;
+
+  const finishCard = useCallback(
+    (code: string, amount: number) => {
+      setThreeDS(null);
+      setCard(emptyCard);
+      setCart({ items: [], coupon: null, cep: "", pix: null });
+      setDone({ code, amount, email: form.email.trim() });
+      window.scrollTo({ top: 0 });
+    },
+    [form.email],
+  );
+  const onThreeDSResult = useCallback(
+    (status: "PAID" | "FAILED") => {
+      if (!threeDS) return;
+      if (status === "PAID") return finishCard(threeDS.code, threeDS.amount);
+      setThreeDS(null);
+      setPayError("O banco não confirmou o pagamento. Tente novamente, use outro cartão ou pague com Pix.");
+    },
+    [threeDS, finishCard],
+  );
+
+  if (done) {
+    return (
+      <Shell>
+        <PaidScreen code={done.code} amount={done.amount} email={done.email} onDone={() => (window.location.href = "/")} />
+      </Shell>
+    );
+  }
+
+  if (threeDS) {
+    return (
+      <Shell>
+        <ThreeDSScreen data={threeDS} onResult={onThreeDSResult} />
+      </Shell>
+    );
+  }
 
   if (cart && cart.pix && cart.items.length === 0) {
     return (
@@ -205,9 +244,33 @@ function CheckoutPage() {
             state: form.state.trim(),
           },
           tracking: readTracking(),
+          ...(method === "card"
+            ? {
+                card: cardForGateway(card),
+                device: {
+                  http_browser_language: navigator.language,
+                  http_browser_color_depth: screen.colorDepth,
+                  http_browser_screen_height: screen.height,
+                  http_browser_screen_width: screen.width,
+                  http_browser_time_difference: -new Date().getTimezoneOffset(),
+                  http_browser_java_enabled: false,
+                  http_browser_javascript_enabled: true,
+                },
+              }
+            : {}),
         }),
       });
       const data = await res.json().catch(() => ({}));
+      if (method === "card") {
+        if (!res.ok) throw new Error(data.error || "Não foi possível processar o cartão agora. Tente novamente.");
+        if (data.status === "PAID") return finishCard(data.code, data.amount);
+        if (data.status === "PENDING_3DS" || data.status === "PENDING") {
+          setThreeDS({ transaction: data.transaction, acsUrl: data.threeDS?.acsUrl, payload: data.threeDS?.payload, code: data.code, amount: data.amount });
+          window.scrollTo({ top: 0 });
+          return;
+        }
+        throw new Error("Não foi possível processar o cartão agora. Tente novamente.");
+      }
       if (!res.ok || !data.pix) throw new Error(data.error || "Não foi possível concluir o pagamento agora. Tente novamente.");
       setCart({ items: [], coupon: null, cep: "", pix: { ...data, email: form.email.trim(), createdAt: Date.now() } });
       window.scrollTo({ top: 0 });

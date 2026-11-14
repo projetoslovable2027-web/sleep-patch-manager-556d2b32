@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { formatBRL, type PixResult } from "@/lib/cart";
+import { PaidScreen } from "./CardScreens";
 import { PixIcon } from "./parts";
 
 export function PixScreen({ pix, onDone }: { pix: PixResult; onDone: () => void }) {
@@ -42,25 +43,7 @@ export function PixScreen({ pix, onDone }: { pix: PixResult; onDone: () => void 
     setTimeout(() => setCopied(false), 2500);
   };
 
-  if (paid) {
-    return (
-      <div className="mx-auto max-w-lg">
-        <div className="co-card p-6 text-center md:p-8">
-          <CheckCircle2 className="mx-auto size-14 text-success" aria-hidden="true" />
-          <h1 className="mt-3 text-2xl font-extrabold text-primary">Pagamento confirmado!</h1>
-          <p className="mt-2 text-muted-foreground">
-            Pedido <strong className="text-foreground">{pix.code}</strong> · {formatBRL(pix.amount)}
-          </p>
-          <p className="mt-4 text-sm">
-            Obrigado pela compra! Enviaremos os detalhes e o rastreio para <strong>{pix.email || "seu e-mail"}</strong>.
-          </p>
-          <Button variant="checkout" size="xl" className="mt-6" onClick={onDone}>
-            Voltar para a loja
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  if (paid) return <PaidScreen code={pix.code} amount={pix.amount} email={pix.email} onDone={onDone} />;
 
   return (
     <div className="mx-auto max-w-lg">

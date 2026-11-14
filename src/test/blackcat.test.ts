@@ -33,3 +33,27 @@ describe("BlackCat Pix sale", () => {
     expect(body.shipping.state).toBe("SP");
   });
 });
+
+describe("BlackCat card sale", () => {
+  it("turns the typed card into BlackCat's fields (MM/AA -> month and 4-digit year)", async () => {
+    const { cardForGateway } = await import("@/lib/checkout-form");
+    expect(cardForGateway({ number: "4111 1111 1111 1111", holder: " MARIA  SOUZA ", expiry: "08/29", cvv: "123" })).toEqual({
+      number: "4111111111111111",
+      holderName: "MARIA SOUZA",
+      expiryMonth: "08",
+      expiryYear: "2029",
+      cvv: "123",
+    });
+  });
+
+  it("charges the order total by credit card with the chosen installments", async () => {
+    const { cardSaleBody } = await import("@/lib/blackcat");
+    const order = buildOrder([{ id: "kit-3", qty: 1 }], { cep: "01310100" });
+    const card = { number: "4111111111111111", holderName: "MARIA SOUZA", expiryMonth: "08", expiryYear: "2029", cvv: "123" };
+    const body = cardSaleBody(order, input, "PS1", card, 5, { http_browser_language: "pt-BR" });
+    expect(body.paymentMethod).toBe("credit_card");
+    expect(body.amount).toBe(12700);
+    expect(body.card.installments).toBe(5);
+    expect(sum(body.items)).toBe(12700);
+  });
+});

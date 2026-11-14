@@ -15,10 +15,10 @@ export const Route = createFileRoute("/api/public/payment-status")({
         try {
           const res = await fetch(`https://api.blackcatoficial.com/api/sales/${encodeURIComponent(id)}/status`, { headers: { "X-API-Key": apiKey } });
           const data = await res.json().catch(() => ({}));
-          if (!res.ok || !data?.success) return json({ error: "Não encontrado." }, res.status === 404 ? 404 : 502);
+          if (!res.ok || !data?.success) return json({ error: "Não encontrado." }, res.status === 404 ? 404 : 424);
           return json({ status: String(data.data?.status || "PENDING").toUpperCase() });
         } catch {
-          return json({ error: "Tente novamente." }, 502);
+          return json({ error: "Tente novamente." }, 424);
         }
       },
     },

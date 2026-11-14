@@ -36,7 +36,19 @@ export function saleItems(order: PricedOrder): SaleItem[] {
   return items;
 }
 
-export function pixSaleBody(order: PricedOrder, input: SaleInput, ref: string) {
+export type CardInput = { number: string; holderName: string; expiryMonth: string; expiryYear: string; cvv: string };
+export type DeviceInput = {
+  http_browser_language?: string | undefined;
+  http_browser_color_depth?: number | undefined;
+  http_browser_screen_height?: number | undefined;
+  http_browser_screen_width?: number | undefined;
+  http_browser_time_difference?: number | undefined;
+  http_browser_java_enabled?: boolean | undefined;
+  http_browser_javascript_enabled?: boolean | undefined;
+  user_agent?: string | undefined;
+};
+
+function baseSaleBody(order: PricedOrder, input: SaleInput, ref: string) {
   const { customer, address, tracking = {} } = input;
   const utm = Object.fromEntries(
     ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].filter((k) => tracking[k]).map((k) => [k, tracking[k]]),
@@ -44,7 +56,6 @@ export function pixSaleBody(order: PricedOrder, input: SaleInput, ref: string) {
   return {
     amount: order.totals.total,
     currency: "BRL",
-    paymentMethod: "pix",
     items: saleItems(order),
     customer: {
       name: customer.name,
@@ -62,9 +73,22 @@ export function pixSaleBody(order: PricedOrder, input: SaleInput, ref: string) {
       state: address.state.toUpperCase(),
       zipCode: digits(address.zipcode),
     },
-    pix: { expiresInDays: 1 },
     externalRef: ref,
     metadata: `Pedido ${ref}`,
     ...utm,
+  };
+}
+
+export function pixSaleBody(order: PricedOrder, input: SaleInput, ref: string) {
+  return { ...baseSaleBody(order, input, ref), paymentMethod: "pix", pix: { expiresInDays: 1 } };
+}
+
+// The card goes straight to BlackCat; it is never stored or logged.
+export function cardSaleBody(order: PricedOrder, input: SaleInput, ref: string, card: CardInput, installments: number, device: DeviceInput) {
+  return {
+    ...baseSaleBody(order, input, ref),
+    paymentMethod: "credit_card",
+    card: { ...card, number: digits(card.number), cvv: digits(card.cvv), installments },
+    device,
   };
 }

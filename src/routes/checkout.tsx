@@ -245,7 +245,6 @@ function CheckoutPage() {
         <a href="/" className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-primary">
           <ArrowLeft className="size-4" aria-hidden="true" /> Continuar comprando
         </a>
-        <h1 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Finalizar compra</h1>
       </div>
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">

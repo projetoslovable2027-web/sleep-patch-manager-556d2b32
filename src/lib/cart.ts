@@ -33,7 +33,9 @@ export type PixResult = {
   amount: number;
   status: string;
   pix: string;
-  qrSvg: string;
+  qrImage?: string;
+  qrSvg?: string;
+  expiresAt?: string | null;
   email?: string;
   createdAt: number;
 };

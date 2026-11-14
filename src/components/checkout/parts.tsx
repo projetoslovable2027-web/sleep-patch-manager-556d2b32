@@ -1,4 +1,4 @@
-import { Check, Lock, Pencil, ShieldCheck } from "@/components/checkout/icons";
+import { Check, Lock, Pencil } from "@/components/checkout/icons";
 import type { ReactNode } from "react";
 
 export function PixIcon({ className = "size-5" }: { className?: string }) {
@@ -42,7 +42,6 @@ export function CheckoutFooter() {
     <footer className="mt-12 border-t border-border bg-surface">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 py-6 text-center text-sm text-muted-foreground md:flex-row md:justify-between md:text-left">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="size-5 text-success" aria-hidden="true" />
           <span>Seus dados estão protegidos e são usados só para entregar o seu pedido.</span>
         </div>
         <nav className="flex gap-4 font-medium">

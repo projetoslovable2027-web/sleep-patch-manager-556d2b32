@@ -10,7 +10,7 @@ export type SaleItem = { title: string; unitPrice: number; quantity: number; tan
 export type SaleInput = {
   customer: { name: string; email: string; document: string; phone: string };
   address: { zipcode: string; street: string; number: string; complement: string; district: string; city: string; state: string };
-  tracking?: Record<string, string>;
+  tracking?: Record<string, string> | undefined;
 };
 
 const digits = (s: string) => s.replace(/\D/g, "");
@@ -25,9 +25,9 @@ export function saleItems(order: PricedOrder): SaleItem[] {
     const sum = base.reduce((s, n) => s + n, 0);
     let left = discount;
     items = order.products.map((p, i) => {
-      const share = i === order.products.length - 1 ? left : Math.round((discount * base[i]) / sum);
+      const share = i === order.products.length - 1 ? left : Math.round((discount * base[i]!) / sum);
       left -= share;
-      return { title: p.quantity > 1 ? `${p.name} x${p.quantity}` : p.name, unitPrice: base[i] - share, quantity: 1, tangible: true };
+      return { title: p.quantity > 1 ? `${p.name} x${p.quantity}` : p.name, unitPrice: base[i]! - share, quantity: 1, tangible: true };
     });
   } else {
     items = order.products.map((p) => ({ title: p.name, unitPrice: p.unit_price, quantity: p.quantity, tangible: true }));

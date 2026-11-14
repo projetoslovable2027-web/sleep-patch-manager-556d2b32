@@ -10,7 +10,7 @@ export const Route = createFileRoute("/api/public/payment-status")({
       GET: async ({ request }) => {
         const id = new URL(request.url).searchParams.get("id") || "";
         if (!/^[A-Za-z0-9_-]{4,80}$/.test(id)) return json({ error: "Pedido inválido." }, 400);
-        const apiKey = process.env.STRIPE_LIVE_API_KEY;
+        const apiKey = process.env['STRIPE_LIVE_API_KEY'];
         if (!apiKey) return json({ error: "Pagamentos indisponíveis." }, 503);
         try {
           const res = await fetch(`https://api.blackcatoficial.com/api/sales/${encodeURIComponent(id)}/status`, { headers: { "X-API-Key": apiKey } });

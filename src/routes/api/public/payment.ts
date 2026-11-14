@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { pixSaleBody } from "@/lib/blackcat";
 // @ts-expect-error plain browser module without type declarations
 import { pixSaleBody } from "@/lib/blackcat";
 import { buildOrder, isValidCpf, isValidPhone, isValidCep, normalizeCoupon, MAX_INSTALLMENTS } from "../../../../public/cart/cart-core.js";
@@ -69,7 +70,7 @@ export const Route = createFileRoute("/api/public/payment")({
           return json({ error: "O pagamento com cartão estará disponível em breve. Por enquanto, pague com Pix." }, 503);
         }
 
-        const apiKey = process.env.STRIPE_LIVE_API_KEY;
+        const apiKey = process.env['STRIPE_LIVE_API_KEY'];
         if (!apiKey) return json({ error: "Os pagamentos estão sendo configurados. Tente novamente em breve." }, 503);
 
         const code = "PS" + Date.now().toString(36).toUpperCase().slice(-5) + Math.random().toString(36).slice(2, 5).toUpperCase();

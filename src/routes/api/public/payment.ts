@@ -84,7 +84,8 @@ export const Route = createFileRoute("/api/public/payment")({
           data = await res.json().catch(() => ({}));
           if (!res.ok || !data?.success || !data.data?.paymentData) {
             console.error("BlackCat create-sale failed", res.status, data?.message, data?.error);
-            return json({ error: "Não foi possível gerar o Pix agora. Confira seus dados e tente novamente." }, 502);
+            const msg = res.status === 400 || res.status === 422 ? "Não foi possível gerar o Pix. Confira seus dados e tente novamente." : "Não foi possível gerar o Pix agora. Tente novamente em instantes.";
+            return json({ error: msg }, 502);
           }
         } catch (err) {
           console.error("BlackCat create-sale error", err);

@@ -338,7 +338,7 @@ function CheckoutPage() {
                 <MethodOption
                   selected={method === "pix"}
                   onSelect={() => setMethod("pix")}
-                  icon={<PixIcon className="size-5 text-success" />}
+                  icon={<PixIcon className="size-5 text-primary" />}
                   title="Pix"
                   subtitle="QR Code e Copia e Cola"
                   price={formatBRL(summary.total)}

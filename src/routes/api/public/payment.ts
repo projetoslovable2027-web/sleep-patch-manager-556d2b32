@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { pixSaleBody } from "@/lib/blackcat";
 // @ts-expect-error plain browser module without type declarations
-import { pixSaleBody } from "@/lib/blackcat";
 import { buildOrder, isValidCpf, isValidPhone, isValidCep, normalizeCoupon, MAX_INSTALLMENTS } from "../../../../public/cart/cart-core.js";
 
 // Creates the payment for a checkout order (Pix or card). Prices are always

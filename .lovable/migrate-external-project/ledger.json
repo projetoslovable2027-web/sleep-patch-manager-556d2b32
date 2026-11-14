@@ -1,72 +1,9 @@
 [
- {
-  "capability": "code: 8 static store pages (home, garantia, FAQ, privacidade, termos, influencer, revendedor, rastreio)",
-  "source": "root *.html served by Express",
-  "outcome": "migrate",
-  "status": "verified",
-  "next_action": "none"
- },
- {
-  "capability": "route aliases and catch-all fallback to home",
-  "source": "server.js",
-  "outcome": "migrate",
-  "status": "verified",
-  "next_action": "none"
- },
- {
-  "capability": "/download/animacao video download",
-  "source": "server.js",
-  "outcome": "migrate",
-  "status": "verified",
-  "next_action": "none"
- },
- {
-  "capability": "assets: css, fonts, images, js, media, /assets/aistudio",
-  "source": "repo folders",
-  "outcome": "migrate (only files referenced by pages)",
-  "status": "verified",
-  "next_action": "none"
- },
- {
-  "capability": "database / records",
-  "source": "none detected",
-  "outcome": "not applicable",
-  "status": "verified",
-  "next_action": "none"
- },
- {
-  "capability": "auth / users",
-  "source": "none detected",
-  "outcome": "not applicable",
-  "status": "verified",
-  "next_action": "none"
- },
- {
-  "capability": "Gemini AI (GEMINI_API_KEY)",
-  "source": "AI Studio template deps only; no call sites",
-  "outcome": "not applicable (unused)",
-  "status": "verified",
-  "next_action": "none"
- },
- {
-  "capability": "third-party scripts (GTM, Nuvemshop cart scripts, WhatsApp, YouTube/Vimeo embeds)",
-  "source": "inline in pages",
-  "outcome": "preserve as-is",
-  "status": "verified",
-  "next_action": "none"
- },
- {
-  "capability": "verification",
-  "source": "-",
-  "outcome": "-",
-  "status": "verified",
-  "next_action": "none"
- },
- {
-  "capability": "Vega Pix checkout secrets (VEGA_API_KEY, VEGA_DOMAIN)",
-  "source": "src/routes/api/public/vega-pix.ts",
-  "outcome": "preserve",
-  "status": "pending",
-  "next_action": "User adds Vega key and approved domain in this project's secrets"
- }
+ {"capability":"code: store pages, checkout, cart, routes, tests","source":"github.com/acessopatchsleep-art/sleep-patch-manager","outcome":"migrate (copied as-is, same TanStack template)","status":"verified","next_action":"none"},
+ {"capability":"assets: images, fonts, css, js, media","source":"public/","outcome":"migrate","status":"verified","next_action":"none"},
+ {"capability":"database / records","source":"none detected","outcome":"not applicable","status":"verified","next_action":"none"},
+ {"capability":"auth / users","source":"none detected","outcome":"not applicable","status":"verified","next_action":"none"},
+ {"capability":"secrets","source":"no env vars referenced","outcome":"not applicable","status":"verified","next_action":"none"},
+ {"capability":"payment gateway (Pix + card) on /api/public/payment","source":"src/routes/api/public/payment.ts (answers 503, not connected in source either)","outcome":"preserve","status":"pending","next_action":"User chooses a payment gateway"},
+ {"capability":"third-party scripts (GTM, WhatsApp, video embeds)","source":"inline in pages","outcome":"preserve as-is","status":"verified","next_action":"none"}
 ]

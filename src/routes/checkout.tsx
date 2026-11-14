@@ -417,7 +417,7 @@ function CheckoutPage() {
                   {submitting ? "Gerando Pix…" : `Pagar ${formatBRL(summary.total)} com Pix`}
                 </Button>
               ) : (
-                <Button variant="checkout" size="xl" className="w-full" onClick={pay} disabled={submitting}>
+                <Button variant="pay" size="xl" onClick={pay} disabled={submitting}>
                   {submitting ? <Loader2 className="animate-spin" aria-hidden="true" /> : <Lock aria-hidden="true" />}
                   {submitting ? "Processando…" : `Pagar ${installments}x de ${formatBRL(summary.total / installments)}`}
                 </Button>

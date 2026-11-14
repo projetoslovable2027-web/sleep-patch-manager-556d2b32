@@ -1,0 +1,9 @@
+[
+ {"capability":"code: store pages, checkout, cart, routes, tests","source":"github.com/acessopatchsleep-art/sleep-patch-manager","outcome":"migrate (copied as-is, same TanStack template)","status":"verified","next_action":"none"},
+ {"capability":"assets: images, fonts, css, js, media","source":"public/","outcome":"migrate","status":"verified","next_action":"none"},
+ {"capability":"database / records","source":"none detected","outcome":"not applicable","status":"verified","next_action":"none"},
+ {"capability":"auth / users","source":"none detected","outcome":"not applicable","status":"verified","next_action":"none"},
+ {"capability":"secrets","source":"no env vars referenced","outcome":"not applicable","status":"verified","next_action":"none"},
+ {"capability":"payment gateway (Pix + card) on /api/public/payment","source":"src/routes/api/public/payment.ts (answers 503, not connected in source either)","outcome":"preserve","status":"pending","next_action":"User chooses a payment gateway"},
+ {"capability":"third-party scripts (GTM, WhatsApp, video embeds)","source":"inline in pages","outcome":"preserve as-is","status":"verified","next_action":"none"}
+]

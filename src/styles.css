@@ -11,6 +11,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Gilroy: the store's own typeface, served from /public/fonts. */
+@font-face { font-family: "Gilroy"; src: url("/fonts/Gilroy-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Gilroy"; src: url("/fonts/Gilroy-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Gilroy"; src: url("/fonts/Gilroy-SemiBold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Gilroy"; src: url("/fonts/Gilroy-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Gilroy"; src: url("/fonts/Gilroy-ExtraBold.woff2") format("woff2"); font-weight: 800; font-style: normal; font-display: swap; }
+
 /*
  * Design system definition.
  *
@@ -30,6 +37,15 @@
  */
 
 @theme inline {
+  --font-sans: "Gilroy", ui-sans-serif, system-ui, sans-serif;
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
+  --color-primary-strong: var(--primary-strong);
+  --color-primary-soft: var(--primary-soft);
+  --color-surface: var(--surface);
+  --shadow-card: var(--shadow-card);
+  --shadow-focus: var(--shadow-focus);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -73,39 +89,48 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  /* Patch Sleep store palette: blue #026CC0, ink #111, soft blue #e7f3fc. */
+  --radius: 0.75rem;
+  --background: oklch(0.972 0.006 255.5);
+  --foreground: oklch(0.178 0 0);
+  --surface: oklch(1 0 0);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.178 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --popover-foreground: oklch(0.178 0 0);
+  --primary: oklch(0.527 0.155 251.5);
+  --primary-strong: oklch(0.456 0.138 252.4);
+  --primary-soft: oklch(0.958 0.018 240);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.958 0.018 240);
+  --secondary-foreground: oklch(0.456 0.138 252.4);
+  --muted: oklch(0.955 0.004 255);
+  --muted-foreground: oklch(0.501 0.022 258.4);
+  --accent: oklch(0.958 0.018 240);
+  --accent-foreground: oklch(0.456 0.138 252.4);
+  --success: oklch(0.614 0.162 149.3);
+  --success-foreground: oklch(1 0 0);
+  --success-soft: oklch(0.963 0.019 157.9);
+  --destructive: oklch(0.589 0.196 25.6);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.928 0 0);
+  --input: oklch(0.88 0.005 255);
+  --ring: oklch(0.527 0.155 251.5);
+  --shadow-card: 0 1px 2px oklch(0.178 0 0 / 0.04), 0 8px 24px oklch(0.456 0.138 252.4 / 0.06);
+  --shadow-focus: 0 0 0 3px oklch(0.527 0.155 251.5 / 0.18);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --sidebar-foreground: oklch(0.178 0 0);
+  --sidebar-primary: oklch(0.527 0.155 251.5);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.958 0.018 240);
+  --sidebar-accent-foreground: oklch(0.456 0.138 252.4);
+  --sidebar-border: oklch(0.928 0 0);
+  --sidebar-ring: oklch(0.527 0.155 251.5);
 }
 
 .dark {
@@ -151,5 +176,50 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
   }
+}
+
+/* Checkout building blocks (used by /checkout). */
+@layer components {
+  .co-card {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: calc(var(--radius) + 4px);
+    box-shadow: var(--shadow-card);
+  }
+  .co-input {
+    height: 3rem;
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-input);
+    background-color: var(--color-surface);
+    padding: 0 0.875rem;
+    font-size: 1rem;
+    color: var(--color-foreground);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .co-input::placeholder { color: var(--color-muted-foreground); opacity: 0.7; }
+  .co-input:focus { outline: none; border-color: var(--color-primary); box-shadow: var(--shadow-focus); }
+  .co-input[aria-invalid="true"] { border-color: var(--color-destructive); }
+  .co-step-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2rem; height: 2rem; border-radius: 9999px; flex-shrink: 0;
+    font-weight: 800; font-size: 0.9rem;
+    background-color: var(--color-primary); color: var(--color-primary-foreground);
+  }
+  .co-step-badge[data-state="done"] { background-color: var(--color-success); color: var(--color-success-foreground); }
+  .co-step-badge[data-state="locked"] { background-color: var(--color-muted); color: var(--color-muted-foreground); }
+  .co-qr svg { width: 100%; height: auto; display: block; }
+  .co-marquee { animation: co-marquee 28s linear infinite; }
+}
+
+@keyframes co-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .co-marquee { animation: none; }
 }

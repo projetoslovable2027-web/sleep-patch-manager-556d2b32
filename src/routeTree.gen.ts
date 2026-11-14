@@ -10,33 +10,219 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SplatRouteImport } from './routes/$'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as GarantiaRouteImport } from './routes/garantia'
+import { Route as GarantiaGummyRouteImport } from './routes/garantia-gummy'
+import { Route as GarantiaPatchSleepRouteImport } from './routes/garantia-patch-sleep'
+import { Route as PerguntasFrequentesRouteImport } from './routes/perguntas-frequentes'
+import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-privacidade'
+import { Route as PoliticasDePrivacidadeRouteImport } from './routes/politicas-de-privacidade'
+import { Route as RastreioRouteImport } from './routes/rastreio'
+import { Route as SejaUmRevendedorRouteImport } from './routes/seja-um-revendedor'
+import { Route as SejaUmaInfluencerRouteImport } from './routes/seja-uma-influencer'
+import { Route as TermosECondicoesRouteImport } from './routes/termos-e-condicoes'
+import { Route as DownloadAnimacaoRouteImport } from './routes/download/animacao'
+import { Route as ApiPublicPaymentRouteImport } from './routes/api/public/payment'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GarantiaRoute = GarantiaRouteImport.update({
+  id: '/garantia',
+  path: '/garantia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GarantiaGummyRoute = GarantiaGummyRouteImport.update({
+  id: '/garantia-gummy',
+  path: '/garantia-gummy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GarantiaPatchSleepRoute = GarantiaPatchSleepRouteImport.update({
+  id: '/garantia-patch-sleep',
+  path: '/garantia-patch-sleep',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerguntasFrequentesRoute = PerguntasFrequentesRouteImport.update({
+  id: '/perguntas-frequentes',
+  path: '/perguntas-frequentes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticaDePrivacidadeRoute = PoliticaDePrivacidadeRouteImport.update({
+  id: '/politica-de-privacidade',
+  path: '/politica-de-privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticasDePrivacidadeRoute = PoliticasDePrivacidadeRouteImport.update({
+  id: '/politicas-de-privacidade',
+  path: '/politicas-de-privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RastreioRoute = RastreioRouteImport.update({
+  id: '/rastreio',
+  path: '/rastreio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SejaUmRevendedorRoute = SejaUmRevendedorRouteImport.update({
+  id: '/seja-um-revendedor',
+  path: '/seja-um-revendedor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SejaUmaInfluencerRoute = SejaUmaInfluencerRouteImport.update({
+  id: '/seja-uma-influencer',
+  path: '/seja-uma-influencer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosECondicoesRoute = TermosECondicoesRouteImport.update({
+  id: '/termos-e-condicoes',
+  path: '/termos-e-condicoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DownloadAnimacaoRoute = DownloadAnimacaoRouteImport.update({
+  id: '/download/animacao',
+  path: '/download/animacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPaymentRoute = ApiPublicPaymentRouteImport.update({
+  id: '/api/public/payment',
+  path: '/api/public/payment',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/checkout': typeof CheckoutRoute
+  '/garantia': typeof GarantiaRoute
+  '/garantia-gummy': typeof GarantiaGummyRoute
+  '/garantia-patch-sleep': typeof GarantiaPatchSleepRoute
+  '/perguntas-frequentes': typeof PerguntasFrequentesRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
+  '/politicas-de-privacidade': typeof PoliticasDePrivacidadeRoute
+  '/rastreio': typeof RastreioRoute
+  '/seja-um-revendedor': typeof SejaUmRevendedorRoute
+  '/seja-uma-influencer': typeof SejaUmaInfluencerRoute
+  '/termos-e-condicoes': typeof TermosECondicoesRoute
+  '/download/animacao': typeof DownloadAnimacaoRoute
+  '/api/public/payment': typeof ApiPublicPaymentRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/checkout': typeof CheckoutRoute
+  '/garantia': typeof GarantiaRoute
+  '/garantia-gummy': typeof GarantiaGummyRoute
+  '/garantia-patch-sleep': typeof GarantiaPatchSleepRoute
+  '/perguntas-frequentes': typeof PerguntasFrequentesRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
+  '/politicas-de-privacidade': typeof PoliticasDePrivacidadeRoute
+  '/rastreio': typeof RastreioRoute
+  '/seja-um-revendedor': typeof SejaUmRevendedorRoute
+  '/seja-uma-influencer': typeof SejaUmaInfluencerRoute
+  '/termos-e-condicoes': typeof TermosECondicoesRoute
+  '/download/animacao': typeof DownloadAnimacaoRoute
+  '/api/public/payment': typeof ApiPublicPaymentRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/checkout': typeof CheckoutRoute
+  '/garantia': typeof GarantiaRoute
+  '/garantia-gummy': typeof GarantiaGummyRoute
+  '/garantia-patch-sleep': typeof GarantiaPatchSleepRoute
+  '/perguntas-frequentes': typeof PerguntasFrequentesRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
+  '/politicas-de-privacidade': typeof PoliticasDePrivacidadeRoute
+  '/rastreio': typeof RastreioRoute
+  '/seja-um-revendedor': typeof SejaUmRevendedorRoute
+  '/seja-uma-influencer': typeof SejaUmaInfluencerRoute
+  '/termos-e-condicoes': typeof TermosECondicoesRoute
+  '/download/animacao': typeof DownloadAnimacaoRoute
+  '/api/public/payment': typeof ApiPublicPaymentRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/checkout'
+    | '/garantia'
+    | '/garantia-gummy'
+    | '/garantia-patch-sleep'
+    | '/perguntas-frequentes'
+    | '/politica-de-privacidade'
+    | '/politicas-de-privacidade'
+    | '/rastreio'
+    | '/seja-um-revendedor'
+    | '/seja-uma-influencer'
+    | '/termos-e-condicoes'
+    | '/download/animacao'
+    | '/api/public/payment'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/$'
+    | '/checkout'
+    | '/garantia'
+    | '/garantia-gummy'
+    | '/garantia-patch-sleep'
+    | '/perguntas-frequentes'
+    | '/politica-de-privacidade'
+    | '/politicas-de-privacidade'
+    | '/rastreio'
+    | '/seja-um-revendedor'
+    | '/seja-uma-influencer'
+    | '/termos-e-condicoes'
+    | '/download/animacao'
+    | '/api/public/payment'
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/checkout'
+    | '/garantia'
+    | '/garantia-gummy'
+    | '/garantia-patch-sleep'
+    | '/perguntas-frequentes'
+    | '/politica-de-privacidade'
+    | '/politicas-de-privacidade'
+    | '/rastreio'
+    | '/seja-um-revendedor'
+    | '/seja-uma-influencer'
+    | '/termos-e-condicoes'
+    | '/download/animacao'
+    | '/api/public/payment'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
+  CheckoutRoute: typeof CheckoutRoute
+  GarantiaRoute: typeof GarantiaRoute
+  GarantiaGummyRoute: typeof GarantiaGummyRoute
+  GarantiaPatchSleepRoute: typeof GarantiaPatchSleepRoute
+  PerguntasFrequentesRoute: typeof PerguntasFrequentesRoute
+  PoliticaDePrivacidadeRoute: typeof PoliticaDePrivacidadeRoute
+  PoliticasDePrivacidadeRoute: typeof PoliticasDePrivacidadeRoute
+  RastreioRoute: typeof RastreioRoute
+  SejaUmRevendedorRoute: typeof SejaUmRevendedorRoute
+  SejaUmaInfluencerRoute: typeof SejaUmaInfluencerRoute
+  TermosECondicoesRoute: typeof TermosECondicoesRoute
+  DownloadAnimacaoRoute: typeof DownloadAnimacaoRoute
+  ApiPublicPaymentRoute: typeof ApiPublicPaymentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +234,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/garantia': {
+      id: '/garantia'
+      path: '/garantia'
+      fullPath: '/garantia'
+      preLoaderRoute: typeof GarantiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/garantia-gummy': {
+      id: '/garantia-gummy'
+      path: '/garantia-gummy'
+      fullPath: '/garantia-gummy'
+      preLoaderRoute: typeof GarantiaGummyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/garantia-patch-sleep': {
+      id: '/garantia-patch-sleep'
+      path: '/garantia-patch-sleep'
+      fullPath: '/garantia-patch-sleep'
+      preLoaderRoute: typeof GarantiaPatchSleepRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perguntas-frequentes': {
+      id: '/perguntas-frequentes'
+      path: '/perguntas-frequentes'
+      fullPath: '/perguntas-frequentes'
+      preLoaderRoute: typeof PerguntasFrequentesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-privacidade': {
+      id: '/politica-de-privacidade'
+      path: '/politica-de-privacidade'
+      fullPath: '/politica-de-privacidade'
+      preLoaderRoute: typeof PoliticaDePrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politicas-de-privacidade': {
+      id: '/politicas-de-privacidade'
+      path: '/politicas-de-privacidade'
+      fullPath: '/politicas-de-privacidade'
+      preLoaderRoute: typeof PoliticasDePrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rastreio': {
+      id: '/rastreio'
+      path: '/rastreio'
+      fullPath: '/rastreio'
+      preLoaderRoute: typeof RastreioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seja-um-revendedor': {
+      id: '/seja-um-revendedor'
+      path: '/seja-um-revendedor'
+      fullPath: '/seja-um-revendedor'
+      preLoaderRoute: typeof SejaUmRevendedorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seja-uma-influencer': {
+      id: '/seja-uma-influencer'
+      path: '/seja-uma-influencer'
+      fullPath: '/seja-uma-influencer'
+      preLoaderRoute: typeof SejaUmaInfluencerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos-e-condicoes': {
+      id: '/termos-e-condicoes'
+      path: '/termos-e-condicoes'
+      fullPath: '/termos-e-condicoes'
+      preLoaderRoute: typeof TermosECondicoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/download/animacao': {
+      id: '/download/animacao'
+      path: '/download/animacao'
+      fullPath: '/download/animacao'
+      preLoaderRoute: typeof DownloadAnimacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/payment': {
+      id: '/api/public/payment'
+      path: '/api/public/payment'
+      fullPath: '/api/public/payment'
+      preLoaderRoute: typeof ApiPublicPaymentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SplatRoute: SplatRoute,
+  CheckoutRoute: CheckoutRoute,
+  GarantiaRoute: GarantiaRoute,
+  GarantiaGummyRoute: GarantiaGummyRoute,
+  GarantiaPatchSleepRoute: GarantiaPatchSleepRoute,
+  PerguntasFrequentesRoute: PerguntasFrequentesRoute,
+  PoliticaDePrivacidadeRoute: PoliticaDePrivacidadeRoute,
+  PoliticasDePrivacidadeRoute: PoliticasDePrivacidadeRoute,
+  RastreioRoute: RastreioRoute,
+  SejaUmRevendedorRoute: SejaUmRevendedorRoute,
+  SejaUmaInfluencerRoute: SejaUmaInfluencerRoute,
+  TermosECondicoesRoute: TermosECondicoesRoute,
+  DownloadAnimacaoRoute: DownloadAnimacaoRoute,
+  ApiPublicPaymentRoute: ApiPublicPaymentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

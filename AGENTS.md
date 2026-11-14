@@ -28,3 +28,13 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Store pages are the original HTML files in `src/site/`, served raw by route server handlers via `src/lib/static-page.ts`; their CSS/JS/images/fonts/media live in `public/` at the same paths the HTML references. Why: the site is a verbatim copy of an existing store and must render identically.
+- The splat route `$.tsx` returns the home page for unknown paths. Why: mirrors the original server's catch-all fallback.
+- The cart is our own drawer (`public/cart/`), injected into every page by `injectCart` in `src/lib/static-page.ts`; it intercepts the original store's buy/cart clicks in the capture phase and stores the cart in localStorage. Pricing/coupon/shipping rules live in `public/cart/cart-core.js` and are tested in `src/test/cart-rules.test.ts`. Why: the original store's cart and checkout backend is not available here.
+- Checkout is our own React page `/checkout` (3 steps + order summary, styled with the store's tokens in `src/styles.css`); the drawer's "Finalizar compra" navigates there, and it shares the drawer's localStorage cart through `src/lib/cart.ts`. Form masks/validation live in `src/lib/checkout-form.ts` (tested). Why: the whole purchase happens on our site, with no external checkout.
+- Payments (Pix and card) go through our server route `src/routes/api/public/payment.ts`, which validates the order and recomputes prices with `buildOrder` from `cart-core.js` (cents) before calling the payment gateway; until a gateway is connected it answers 503. The order bump is `BUMP` in `cart-core.js` (cart item `bump-1`, max 1, needs a kit), so the server prices it too. Why: the browser must never set prices or see gateway keys.
+- Card fields (number, holder, expiry, CVV) are typed on `/checkout`, validated by `validateCard` in `src/lib/checkout-form.ts`, kept in React state only and never sent to our server raw; the gateway's own browser tokenization must turn them into a token. Why: avoids handling raw card data (PCI).
+- The checkout imports icons from `src/components/checkout/icons.tsx` (inline lucide copies), shows order-summary photos from `public/images/thumbs/`, and renders its form on the server with a placeholder summary until the saved cart is read. Why: keeps `/checkout` fast to open; don't import `lucide-react` or full-size photos there.
